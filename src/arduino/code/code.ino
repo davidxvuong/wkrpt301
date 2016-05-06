@@ -7,38 +7,49 @@ analog 1: x-axis
 analog 2: y-axis
 analog 3: z-axis
 */
+
+#include <Wire.h>
+
 const int xpin = 1;                  // x-axis of the accelerometer
 const int ypin = 2;                  // y-axis
 const int zpin = 3;                  // z-axis (only on 3-axis models)
+
+float x_adjusted;
+float y_adjusted;
+float z_adjusted;
+
 void setup()
 {
   // initialize the serial communications:
   Serial.begin(9600);
+
+  // Initialize i2c
+  Wire.begin(0x8);
+  Wire.onRequest(requestEvent);
 }
 void loop()
 {
   int x = analogRead(xpin);  //read from xpin
-  delay(1); //
+  delay(1);
   int y = analogRead(ypin);  //read from ypin
   delay(1);  
   int z = analogRead(zpin);  //read from zpin
+
+  x_adjusted = ((float)x - 331.5)/65*9.8;
+  y_adjusted = ((float)y - 329.5)/68.5*9.8;
+  z_adjusted = ((float)z - 340)/68*9.8;
   
-  float zero_G = 512.0; //ADC is 0~1023  the zero g output equal to Vs/2
-                        //ADXL335 power supply by Vs 3.3V
-  float scale = 102.3;  //ADXL335330 Sensitivity is 330mv/g
-                        //330 * 1024/3.3/1000  
-  
-  /*Serial.print(x); 
+  Serial.print(x);  //print x value on serial monitor
   Serial.print("\t");
-  Serial.print(y);
+  Serial.print(y);  //print y value on serial monitor
   Serial.print("\t");
-  Serial.print(z);  
-  Serial.print("\n");*/
-  Serial.print(((float)x - 331.5)/65*9.8);  //print x value on serial monitor
-  Serial.print("\t");
-  Serial.print(((float)y - 329.5)/68.5*9.8);  //print y value on serial monitor
-  Serial.print("\t");
-  Serial.print(((float)z - 340)/68*9.8);  //print z value on serial monitor
+  Serial.print(z);  //print z value on serial monitor
   Serial.print("\n");
   delay(1000);  //wait for 1 second 
 }
+
+void requestEvent() {
+  Serial.println("i2c!");
+  Wire.write("hello ");
+}
+
