@@ -9,7 +9,7 @@ def readNumber():
 	return number
 
 def displayValues(values):
-	print str(values[0]) + " " + str(values[1]) + " " + str(values[2])
+	print "Receiving data: " +  str(values[0]) + " " + str(values[1]) + " " + str(values[2])
 
 try:
 
