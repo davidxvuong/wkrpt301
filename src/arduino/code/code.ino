@@ -18,6 +18,8 @@ float x_adjusted;
 float y_adjusted;
 float z_adjusted;
 
+byte data[3];
+
 void setup()
 {
   // initialize the serial communications:
@@ -38,18 +40,21 @@ void loop()
   x_adjusted = ((float)x - 331.5)/65*9.8;
   y_adjusted = ((float)y - 329.5)/68.5*9.8;
   z_adjusted = ((float)z - 340)/68*9.8;
+
+  data[0] = (int)(x_adjusted);
+  data[1] = (int)(y_adjusted);
+  data[2] = (int)(z_adjusted);
   
-  Serial.print(x);  //print x value on serial monitor
-  Serial.print("\t");
-  Serial.print(y);  //print y value on serial monitor
-  Serial.print("\t");
-  Serial.print(z);  //print z value on serial monitor
-  Serial.print("\n");
   delay(1000);  //wait for 1 second 
 }
 
 void requestEvent() {
-  Serial.println("i2c!");
-  Wire.write("hello ");
+  Serial.print("Sending data: ");
+  Serial.print(data[0]);
+  Serial.print(", ");
+  Serial.print(data[1]);
+  Serial.print(", ");
+  Serial.println(data[2]);
+  Wire.write(data, 3);
 }
 
