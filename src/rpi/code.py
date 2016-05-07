@@ -8,12 +8,14 @@ def readNumber():
 	number = bus.read_i2c_block_data(address, 0)
 	return number
 
+def displayValues(values):
+	print str(values[0]) + " " + str(values[1]) + " " + str(values[2])
 
-data = readNumber()
-x = data[0]
-y = data[1]
-z = data[2]
+try:
 
-print x
-print y
-print z
+	while True:
+		data = readNumber()
+		displayValues(data)
+		time.sleep(1)
+except KeyboardInterrupt:
+	print "\nProgram terminated"
